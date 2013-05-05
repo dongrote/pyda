@@ -1,5 +1,5 @@
 import os
-import struct
+from struct import *
 from cStringIO import StringIO
 from common.loader import Loader
 
@@ -30,10 +30,7 @@ class ELFHeader(object):
     EI_VERSION = 6
     EI_PAD = 7
     EI_NIDENT = 16
-    ELFMAG0 = 0x7f
-    ELFMAG1 = 'E'
-    ELFMAG2 = 'L'
-    ELFMAG3 = 'F'
+    ELFMAGIC = '\x7fELF'
     ELFCLASSNONE = 0
     ELFCLASS32 = 1
     ELFCLASS64 = 2
@@ -128,3 +125,11 @@ STT_HIPROC = 15
 class ELFLoader(Loader):
     def __init__(self, filename=''):
         super(ELFLoader, self).__init__(self, filename)
+        self.readHeader()
+
+    def readHeader(self):
+        header = ELFHeader()
+        header.e_ident = unpack('4s',self.blob[:4])
+        if header.e_ident != header.ELFMAGIC:
+            raise ValueError("Not an ELF file.")
+
