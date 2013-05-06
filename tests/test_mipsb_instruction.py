@@ -20,6 +20,13 @@ class TestRInstructionShift(unittest.TestCase):
     def test_getShiftAmount(self):
         self.assertEqual(self.instruction.shift,4)
 
+class TestSyscallInstruction(unittest.TestCase):
+    def setUp(self):
+        self.bin = '\x00\x00\x00\x0c'
+        self.instruction = BigEndianMipsInstruction(self.bin)
+    def test_getOpcodeMnemonic(self):
+        self.assertEqual(self.instruction.mnemonic,'syscall')
+
 
 if '__main__' == __name__:
     unittest.main()
